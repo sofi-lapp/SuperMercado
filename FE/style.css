@@ -1,0 +1,21 @@
+body { font-family: sans-serif; background: #f3f4f6; margin: 0; }
+.hidden { display: none !important; }
+
+/* Header */
+header { background: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+/* Vistas */
+.view { padding: 20px; }
+.auth-card { max-width: 400px; margin: 100px auto; background: white; padding: 2rem; border-radius: 8px; text-align: center; }
+
+/* Grid de Productos */
+#content-area { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+.product-card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+/* Carrito Sidebar */
+.sidebar { position: fixed; right: 0; top: 0; width: 300px; height: 100%; background: white; z-index: 100; box-shadow: -2px 0 5px rgba(0,0,0,0.2); padding: 20px; }
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 90; }
+
+input, button { padding: 10px; margin: 5px 0; width: 100%; border: 1px solid #ddd; border-radius: 4px; }
+button { background: #2563eb; color: white; border: none; cursor: pointer; }
+button:hover { background: #1d4ed8; }
