@@ -26,6 +26,7 @@ public class CarritoService {
     private final CarritoItemRepository carritoItemRepository;
     private final ProductoRepository productoRepository;
 
+    @Transactional(readOnly = true)
     public CarritoResponse obtenerCarrito(Long clienteId) {
         Carrito carrito = buscarCarrito(clienteId);
         return mapearCarrito(carrito);

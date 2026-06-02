@@ -22,12 +22,14 @@ public class CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
 
+    @Transactional(readOnly = true)
     public List<CategoriaResponse> listarArbol() {
         return categoriaRepository.findByCategoriaPadreIsNullAndActivaTrue().stream()
                 .map(CategoriaResponse::from)
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<ProductoResponse> obtenerProductosDeCategoriaConHijos(Long categoriaId) {
         Categoria categoria = buscarCategoria(categoriaId);
         ComponenteCategoria componente = construirComposite(categoria);

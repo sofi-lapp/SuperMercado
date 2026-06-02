@@ -5,18 +5,16 @@ import com.uade.supermercado.dto.request.RegisterRequest;
 import com.uade.supermercado.dto.response.AuthResponse;
 import com.uade.supermercado.exception.CredencialesInvalidasException;
 import com.uade.supermercado.model.carrito.Carrito;
+import com.uade.supermercado.model.usuario.Administrador;
 import com.uade.supermercado.model.usuario.Cliente;
 import com.uade.supermercado.model.usuario.Usuario;
 import com.uade.supermercado.repository.CarritoRepository;
 import com.uade.supermercado.repository.UsuarioRepository;
 import com.uade.supermercado.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +24,6 @@ public class AuthService {
     private final CarritoRepository carritoRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-    private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional
     public AuthResponse registrar(RegisterRequest request) {
@@ -55,10 +52,6 @@ public class AuthService {
         return construirAuthResponse(token, usuario);
     }
 
-    public void logout(String token) {
-        redisTemplate.opsForValue().set("blacklist:" + token, "1", 24, TimeUnit.HOURS);
-    }
-
     private Cliente crearCliente(RegisterRequest request) {
         Cliente cliente = new Cliente();
         cliente.setNombre(request.nombre());
@@ -75,12 +68,13 @@ public class AuthService {
     }
 
     private AuthResponse construirAuthResponse(String token, Usuario usuario) {
+        String rol = usuario instanceof Administrador ? "ADMIN" : "CLIENTE";
         AuthResponse.UsuarioInfo info = new AuthResponse.UsuarioInfo(
                 usuario.getId(),
                 usuario.getNombre(),
                 usuario.getApellido(),
                 usuario.getEmail(),
-                usuario.getRol()
+                rol
         );
         return new AuthResponse(token, info);
     }

@@ -22,6 +22,7 @@ public class ProductoService {
     private final CategoriaRepository categoriaRepository;
     private final ImagenService imagenService;
 
+    @Transactional(readOnly = true)
     public Page<ProductoResponse> listar(String nombre, Long categoriaId, Pageable pageable) {
         if (nombre != null && !nombre.isBlank()) {
             return productoRepository
@@ -36,6 +37,7 @@ public class ProductoService {
         return productoRepository.findByActivoTrue(pageable).map(ProductoResponse::from);
     }
 
+    @Transactional(readOnly = true)
     public ProductoResponse obtenerPorId(Long id) {
         return ProductoResponse.from(buscarProducto(id));
     }

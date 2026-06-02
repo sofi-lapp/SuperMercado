@@ -18,7 +18,8 @@ public record PedidoResponse(
         MetodoPagoEnum metodoPago,
         String referenciaPago,
         String direccionEnvio,
-        List<ItemResponse> items
+        List<ItemResponse> items,
+        String urlPago
 ) {
     public record ItemResponse(
             Long id,
@@ -31,6 +32,10 @@ public record PedidoResponse(
     }
 
     public static PedidoResponse from(Pedido p) {
+        return from(p, null);
+    }
+
+    public static PedidoResponse from(Pedido p, String urlPago) {
         List<ItemResponse> items = p.getItems().stream()
                 .map(i -> new ItemResponse(
                         i.getId(),
@@ -52,7 +57,8 @@ public record PedidoResponse(
                 p.getMetodoPago(),
                 p.getReferenciaPago(),
                 p.getDireccionEnvio(),
-                items
+                items,
+                urlPago
         );
     }
 }

@@ -62,7 +62,7 @@ public class CheckoutFacade {
         registrarHistorial(pedido);
         notificarObservadores(pedido);
 
-        return PedidoResponse.from(pedido);
+        return PedidoResponse.from(pedido, resultado.urlPago());
     }
 
     private Carrito obtenerCarritoNoVacio(Long clienteId) {

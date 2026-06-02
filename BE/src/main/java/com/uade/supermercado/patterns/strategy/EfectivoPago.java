@@ -12,7 +12,7 @@ public class EfectivoPago implements MetodoPago {
     public ResultadoPago procesarPago(BigDecimal monto, String referenciaPedido) {
         String referencia = "EFE-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         return new ResultadoPago(true, referencia,
-                "Pago en efectivo registrado. Referencia: " + referencia, MetodoPagoEnum.EFECTIVO);
+                "Pago en efectivo registrado. Referencia: " + referencia, MetodoPagoEnum.EFECTIVO, null);
     }
 
     @Override
