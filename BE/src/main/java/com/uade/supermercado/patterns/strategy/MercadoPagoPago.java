@@ -1,6 +1,7 @@
 package com.uade.supermercado.patterns.strategy;
 
 import com.mercadopago.MercadoPagoConfig;
+import com.mercadopago.client.preference.PreferenceBackUrlsRequest;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferenceRequest;
@@ -19,6 +20,9 @@ public class MercadoPagoPago implements MetodoPago {
     @Value("${mercadopago.access.token}")
     private String accessToken;
 
+    @Value("${app.frontend.url:http://localhost:5173}")
+    private String frontendUrl;
+
     @Override
     public ResultadoPago procesarPago(BigDecimal monto, String referenciaPedido) {
         try {
@@ -30,23 +34,31 @@ public class MercadoPagoPago implements MetodoPago {
                     .unitPrice(monto)
                     .build();
 
+            PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
+                    .success(frontendUrl + "/mis-pedidos?pago=exitoso")
+                    .failure(frontendUrl + "/checkout?pago=fallido")
+                    .pending(frontendUrl + "/mis-pedidos?pago=pendiente")
+                    .build();
+
             PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                     .items(List.of(item))
                     .externalReference(referenciaPedido)
+                    .backUrls(backUrls)
                     .build();
 
             PreferenceClient client = new PreferenceClient();
             Preference preference = client.create(preferenceRequest);
 
             return new ResultadoPago(true, preference.getId(),
-                    "Preferencia Mercado Pago creada exitosamente", MetodoPagoEnum.MERCADO_PAGO);
+                    "Preferencia Mercado Pago creada exitosamente", MetodoPagoEnum.MERCADO_PAGO,
+                    preference.getSandboxInitPoint());
 
         } catch (MPApiException e) {
             return new ResultadoPago(false, null,
-                    "Error API Mercado Pago: " + e.getApiResponse().getContent(), MetodoPagoEnum.MERCADO_PAGO);
+                    "Error API Mercado Pago: " + e.getApiResponse().getContent(), MetodoPagoEnum.MERCADO_PAGO, null);
         } catch (MPException e) {
             return new ResultadoPago(false, null,
-                    "Error al conectar con Mercado Pago: " + e.getMessage(), MetodoPagoEnum.MERCADO_PAGO);
+                    "Error al conectar con Mercado Pago: " + e.getMessage(), MetodoPagoEnum.MERCADO_PAGO, null);
         }
     }
 

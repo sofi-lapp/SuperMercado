@@ -31,16 +31,19 @@ public class PedidoService {
     private final SMSObservador smsObservador;
     private final PushObservador pushObservador;
 
+    @Transactional(readOnly = true)
     public List<PedidoResponse> listarPorCliente(Long clienteId) {
         return pedidoRepository.findByClienteId(clienteId).stream()
                 .map(PedidoResponse::from)
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public PedidoResponse obtenerPorId(Long id) {
         return PedidoResponse.from(buscarPedido(id));
     }
 
+    @Transactional(readOnly = true)
     public List<PedidoResponse> listarTodos(EstadoPedidoEnum estado) {
         List<Pedido> pedidos = (estado != null)
                 ? pedidoRepository.findByEstado(estado)

@@ -12,7 +12,7 @@ public class TransferenciaPago implements MetodoPago {
     public ResultadoPago procesarPago(BigDecimal monto, String referenciaPedido) {
         String referencia = "TRF-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         return new ResultadoPago(true, referencia,
-                "Transferencia registrada. Referencia: " + referencia, MetodoPagoEnum.TRANSFERENCIA);
+                "Transferencia registrada. Referencia: " + referencia, MetodoPagoEnum.TRANSFERENCIA, null);
     }
 
     @Override
